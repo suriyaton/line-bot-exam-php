@@ -1,15 +1,23 @@
-<?php // callback.php
+<?php
 
-require "vendor/autoload.php";
-require_once('vendor/linecorp/line-bot-sdk/line-bot-sdk-tiny/LINEBotTiny.php');
+include ('line-bot-api/php/line-bot.php');
 
-$access_token = 'L251Y3XTAdYxI8aE1brFn58ob3Qjaej76QiEWG9r4DCzKNCnmElKH03h6G4v84gIm2+uik7bGT8TTHfEmqgAsUfyG8BOfsorBJzJmOrhUtaZULT39rAX/mxJ9XbwNZ/+U9Jxcf37mLlVGZo1XGXDpwdB04t89/1O/w1cDnyilFU=';
+$channelSecret = '91d92ef78dabe8d1c878d211ea9894ab';
+$access_token  = 'L251Y3XTAdYxI8aE1brFn58ob3Qjaej76QiEWG9r4DCzKNCnmElKH03h6G4v84gIm2+uik7bGT8TTHfEmqgAsUfyG8BOfsorBJzJmOrhUtaZULT39rAX/mxJ9XbwNZ/+U9Jxcf37mLlVGZo1XGXDpwdB04t89/1O/w1cDnyilFU=';
 
-// Get POST body content
-$content = file_get_contents('php://input');
-// Parse JSON
-$events = json_decode($content, true);
-// Validate parsed JSON data
+$bot = new BOT_API($channelSecret, $access_token);
+	
+if (!empty($bot->isEvents)) {
+		
+    $bot->replyMessageNew($bot->replyToken, json_encode($bot->message));
 
+    if ($bot->isSuccess()) {
+        echo 'Succeeded!';
+        exit();
+    }
 
-echo $events ;
+    // Failed
+    echo $bot->response->getHTTPStatus . ' ' . $bot->response->getRawBody(); 
+    exit();
+
+}
